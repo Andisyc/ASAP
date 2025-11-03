@@ -191,12 +191,15 @@ class BasePolicy:
     def get_policy_action(self, robot_state_data):
         # Process low states
         obs = self.prepare_obs_for_rl(robot_state_data)
-        
+
         # Policy inference
-        policy_action = self.policy(obs)
+        policy_action = self.policy(obs) # 裁剪动作post processing
         policy_action = np.clip(policy_action, -100, 100)
 
-        self.last_policy_action = policy_action.copy()  
+        # update last policy
+        self.last_policy_action = policy_action.copy()
+
+        # scale down to get real action
         scaled_policy_action = policy_action * self.policy_action_scale
 
         return scaled_policy_action
@@ -207,6 +210,7 @@ class BasePolicy:
         if self.robot_state_data is None:
             print("No robot state data received, skipping rl inference")
             return
+        
         # Get policy action
         scaled_policy_action = self.get_policy_action(self.robot_state_data)
         if self.get_ready_state:

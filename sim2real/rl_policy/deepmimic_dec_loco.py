@@ -373,6 +373,7 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
                 self.interpolation_target_pos[1:3] *= 0.0
                 self.interpolation_start_time = self.node.get_clock().now().nanoseconds / 1e9
                 print(f"Interpolating from {self.interpolation_start_pos} to {self.interpolation_target_pos}")
+            
             # Phase 2: Interpolation is in progress
             if not self.interpolation_done and self.interpolation_progress < self.interpolation_threshold_loco2mimic:
                 timestep = self.node.get_clock().now().nanoseconds / 1e9 - self.interpolation_start_time
@@ -392,18 +393,20 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
                     alpha = min(self.interpolation_progress, 1.0)
                     self.ref_upper_dof_pos[0, :] = (1 - alpha) * self.interpolation_start_pos + alpha * self.interpolation_target_pos
                     self.vis_process("Interpolation", alpha)
+            
             # Phase 3: Interpolation is done, use mimic policy
             if self.interpolation_done:
-                obs = self.prepare_obs_for_rl(robot_state_data)
+                obs = self.prepare_obs_for_rl(robot_state_data) # get proprioception
                 if self.policy_locomotion_mimic_flag:
-                    policy_action = np.clip(self.policy(obs), -100, 100)
+                    policy_action = np.clip(self.policy(obs), -100, 100) # post processing
                     full_policy_action = np.zeros((1, self.num_dofs))
                     full_policy_action[:, self.policy_mimic_robot_dofs[self.policy_mimic_idx]] = policy_action
-                    self.last_action = full_policy_action.copy()
-                    scaled_policy_action = full_policy_action * self.policy_action_scale
+                    self.last_action = full_policy_action.copy() # update last action
+                    scaled_policy_action = full_policy_action * self.policy_action_scale # scale down to get real action
                 else:
                     # Go to Phase 4, doing nothing here
                     pass
+        
         # Phase 4: Mimic policy is done or emergency stop, switch back to locomotion policy
         if not self.policy_locomotion_mimic_flag or not self.interpolation_done:
             self.policy = self.policy_locomotion
@@ -411,8 +414,10 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
             policy_action = np.clip(self.policy(obs), -100, 100)
             self.last_action[:, :self.num_lower_dofs] = policy_action.copy()
             self.last_action[:, self.num_lower_dofs:] = self.ref_upper_dof_pos.copy()
+
             # Lower body actions
             scaled_policy_action = policy_action * self.policy_action_scale
+            
             # Interpolate back to default upper body dof pos for locomotion
             if self.interpolation_done or self.interpolation_emergency:
                 # Update reference upper dof pos
