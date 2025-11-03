@@ -417,18 +417,19 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
 
             # Lower body actions
             scaled_policy_action = policy_action * self.policy_action_scale
-            
+
             # Interpolate back to default upper body dof pos for locomotion
             if self.interpolation_done or self.interpolation_emergency:
                 # Update reference upper dof pos
                 timestep = self.node.get_clock().now().nanoseconds / 1e9 - self.frame_start_time
-                alpha = max((timestep - self.interpolation_duration_mimic2loco_gap)/self.interpolation_duration_mimic2loco, 0.0)
+                alpha = max((timestep - self.interpolation_duration_mimic2loco_gap)/self.interpolation_duration_mimic2loco, 0.0) # mixup parameter
                 self.ref_upper_dof_pos = (1 - alpha) * self.end_upper_dof_pos + alpha * np.array(self.config["loco_upper_body_dof_pos"])
-                self.vis_process("Interpolation", alpha)
+                self.vis_process("Interpolation", alpha) # visualize tracking process
                 if alpha >= 1.0:
                     self.interpolation_done = False
                     self.interpolation_emergency = False
                     self.frame_start_time = self.node.get_clock().now().nanoseconds / 1e9
+            
             # Combine upper body actions
             scaled_policy_action = np.concatenate([scaled_policy_action, self.ref_upper_dof_pos], axis=1)
 

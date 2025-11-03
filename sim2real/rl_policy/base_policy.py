@@ -213,6 +213,8 @@ class BasePolicy:
         
         # Get policy action
         scaled_policy_action = self.get_policy_action(self.robot_state_data)
+
+        # Get torque position
         if self.get_ready_state:
             # import ipdb; ipdb.set_trace()
             q_target = self.get_init_target(self.robot_state_data)
@@ -225,14 +227,14 @@ class BasePolicy:
                 scaled_policy_action = np.concatenate([scaled_policy_action, np.zeros((1, self.num_dofs - scaled_policy_action.shape[1]))], axis=1)
             q_target = scaled_policy_action + self.default_dof_angles
 
-        # Clip q target
+        # Clip q target (Clip torque position)
         if self.motor_pos_lower_limit_list and self.motor_pos_upper_limit_list:
             q_target[0] = np.clip(q_target[0], self.motor_pos_lower_limit_list, self.motor_pos_upper_limit_list)
 
         # Send command
-        cmd_q = q_target[0]
-        cmd_dq = np.zeros(self.num_dofs)
-        cmd_tau = np.zeros(self.num_dofs)
+        cmd_q = q_target[0] # motor position
+        cmd_dq = np.zeros(self.num_dofs) # motor vel
+        cmd_tau = np.zeros(self.num_dofs) # motor torque
         self.command_sender.send_command(cmd_q, cmd_dq, cmd_tau)
 
     def start_key_listener(self):
@@ -324,18 +326,23 @@ class BasePolicy:
         print(f"Stand command: {self.stand_command}")
 
     def process_joystick_input(self):
-        # Process stick
+        # Process stick Read in wireless control msg
         if self.wc_msg.keys == 0:
             self.lin_vel_command[0, 1] = -(self.wc_msg.lx if abs(self.wc_msg.lx) > 0.1 else 0.0) * self.stand_command[0, 0] * 0.5
             self.lin_vel_command[0, 0] = (self.wc_msg.ly if abs(self.wc_msg.ly) > 0.1 else 0.0) * self.stand_command[0, 0] * 0.5
             self.ang_vel_command[0, 0] = -(self.wc_msg.rx if abs(self.wc_msg.rx) > 0.1 else 0.0) * self.stand_command[0, 0]
+        
+        # Get current key
         cur_key = self.wc_key_map.get(self.wc_msg.keys, None)
         self.last_key_states = self.key_states.copy()
+
+        # assemble cur_key dict
         if cur_key:
             self.key_states[cur_key] = True
         else:
             self.key_states = {key: False for key in self.wc_key_map.values()}
         
+        # process cur_key dict
         for key, is_pressed in self.key_states.items():
             if is_pressed and not self.last_key_states.get(key, False):
                 self.handle_joystick_button(key)
@@ -430,8 +437,11 @@ class BasePolicy:
         start_time = time.time()
         try:
             while rclpy.ok():
+                # 确定使用手柄且发送的信息不为None时
                 if self.use_joystick and self.wc_msg is not None:
                     self.process_joystick_input()
+                
+                # get action & send to torque
                 self.rl_inference()
                 end_time = time.time()
                 total_inference_cnt += 1

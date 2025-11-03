@@ -19,6 +19,7 @@ class CommandSender:
             self.low_cmd = unitree_hg_msg_dds__LowCmd_()
         else:
             raise NotImplementedError(f"Robot type {self.config['ROBOT_TYPE']} is not supported yet")
+
         # init robot and kp kd
         self.robot = Robot(self.config)
         self.kp_level = 1.0 # 0.1
@@ -33,6 +34,7 @@ class CommandSender:
         self.weak_motor_joint_index = []
         for _, value in self.robot.WeakMotorJointIndex.items():
             self.weak_motor_joint_index.append(value)
+        
         # init low cmd publisher
         self.lowcmd_publisher_ = ChannelPublisher("rt/lowcmd", LowCmd_)
         self.lowcmd_publisher_.Init()
