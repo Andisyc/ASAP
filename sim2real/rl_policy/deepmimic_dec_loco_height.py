@@ -235,11 +235,18 @@ if __name__ == "__main__":
 
     with open(args.config) as file:
         config = yaml.load(file, Loader=yaml.FullLoader)
+
+    # ros2 python接口初始化
     rclpy.init(args=None)
+
+    # 创建主节点
     node = rclpy.create_node('simple_node')
+
+    # 创建主循环并启动
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start() 
 
+    # 创建Policy Model对象
     locomotion_policy = MotionTrackingDecLocoHeightPolicy(config=config, 
                                                         node=node, 
                                                         loco_model_path=args.loco_model_path, 
@@ -247,5 +254,6 @@ if __name__ == "__main__":
                                                         use_jit=args.use_jit,
                                                         rl_rate=50, 
                                                         decimation=4)
+    # 启动Policy Model
     locomotion_policy.run()
     rclpy.shutdown()

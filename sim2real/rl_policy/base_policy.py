@@ -191,6 +191,7 @@ class BasePolicy:
     def get_policy_action(self, robot_state_data):
         # Process low states
         obs = self.prepare_obs_for_rl(robot_state_data)
+        
         # Policy inference
         policy_action = self.policy(obs)
         policy_action = np.clip(policy_action, -100, 100)
