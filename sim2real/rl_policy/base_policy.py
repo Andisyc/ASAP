@@ -142,7 +142,7 @@ class BasePolicy:
 
     def setup_policy(self, model_path, use_jit):
         # load onnx policy
-        if not use_jit:
+        if not use_jit: # torch.jit: just in time compiler, 将动态图转静态图
             self.onnx_policy_session = onnxruntime.InferenceSession(model_path)
             self.onnx_input_name = self.onnx_policy_session.get_inputs()[0].name
             self.onnx_output_name = self.onnx_policy_session.get_outputs()[0].name

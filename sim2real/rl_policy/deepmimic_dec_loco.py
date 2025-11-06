@@ -174,6 +174,7 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
     def setup_policy(self, model_path, use_jit):
         """
         Setup all policies here.
+        lmao, parent class impel jit, whereas children class neither impl or inherit
         """
         # load onnx policy
         if not use_jit:
@@ -184,8 +185,14 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
                 return self.onnx_policy_session.run([self.onnx_output_name], {self.onnx_input_name: obs})[0]
         else:
             raise NotImplementedError("JIT not implemented yet.")
-        
+
         self.policy_locomotion = policy_act
+
+        # loadin multi mimic policy
+        # policies_mimic contain onnx
+        # policy_mimic_names contain name
+        # policy_mimic_robot_types contain robot type
+        # policy_mimic_robot_dofs contain robot dofs
         self.setup_mimic_policies()
 
         # Default policy is locomotion
