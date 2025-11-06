@@ -184,8 +184,10 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
                 return self.onnx_policy_session.run([self.onnx_output_name], {self.onnx_input_name: obs})[0]
         else:
             raise NotImplementedError("JIT not implemented yet.")
+        
         self.policy_locomotion = policy_act
         self.setup_mimic_policies()
+
         # Default policy is locomotion
         self.policy = self.policy_locomotion
     
@@ -363,7 +365,7 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
         return obs.astype(np.float32)
     
     def get_policy_action(self, robot_state_data):
-        if self.policy_locomotion_mimic_flag:
+        if self.policy_locomotion_mimic_flag: # if policy_locomotion_mimic_flag == 1
             # Phase 1: Start interpolation
             if not self.interpolation_done and not self.interpolation_active:
                 self.interpolation_progress = 0.0
@@ -408,7 +410,7 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
                     pass
         
         # Phase 4: Mimic policy is done or emergency stop, switch back to locomotion policy
-        if not self.policy_locomotion_mimic_flag or not self.interpolation_done:
+        if not self.policy_locomotion_mimic_flag or not self.interpolation_done: # if policy_locomotion_mimic_flag == 0
             self.policy = self.policy_locomotion
             obs = self.prepare_obs_for_rl(robot_state_data)
             policy_action = np.clip(self.policy(obs), -100, 100)
@@ -479,6 +481,7 @@ class MotionTrackingDecLocoPolicy(BasePolicy):
         
 
     def handle_joystick_button(self, cur_key):
+        # 继承父类方法会增加新代码而不是覆盖
         super().handle_joystick_button(cur_key)
         if cur_key == "select":
             self.history_handler.reset([0])
