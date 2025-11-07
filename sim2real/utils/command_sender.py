@@ -79,7 +79,7 @@ class CommandSender:
             
             # print(f"motor_index: {motor_index}, joint_index: {joint_index}")
 
-            # send default joint position command
+            # setup position, velocity, torque
             if joint_index == -1:
                 self.low_cmd.motor_cmd[motor_index].q = self.robot.DEFAULT_MOTOR_ANGLES[motor_index]
                 self.low_cmd.motor_cmd[motor_index].dq = 0.0
