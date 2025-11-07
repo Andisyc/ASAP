@@ -193,7 +193,9 @@ class BasePolicy:
         obs = self.prepare_obs_for_rl(robot_state_data)
 
         # Policy inference
-        policy_action = self.policy(obs) # 裁剪动作post processing
+        policy_action = self.policy(obs)
+        
+        # post processing: clip action
         policy_action = np.clip(policy_action, -100, 100)
 
         # update last policy

@@ -26,6 +26,7 @@ class CommandSender:
         self.waist_kp_level = 1.0
         self.robot_kp = np.zeros(self.robot.NUM_MOTORS)
         self.robot_kd = np.zeros(self.robot.NUM_MOTORS)
+
         # set kp level
         for i in range(len(self.robot.MOTOR_KP)):
             self.robot_kp[i] = self.robot.MOTOR_KP[i] * self.kp_level
@@ -75,9 +76,11 @@ class CommandSender:
         for i in range(self.robot.NUM_MOTORS):
             motor_index = self.robot.JOINT2MOTOR[i]
             joint_index = self.robot.MOTOR2JOINT[i]
+            
             # print(f"motor_index: {motor_index}, joint_index: {joint_index}")
+
+            # send default joint position command
             if joint_index == -1:
-                # send default joint position command
                 self.low_cmd.motor_cmd[motor_index].q = self.robot.DEFAULT_MOTOR_ANGLES[motor_index]
                 self.low_cmd.motor_cmd[motor_index].dq = 0.0
                 self.low_cmd.motor_cmd[motor_index].tau = 0.0
@@ -85,7 +88,8 @@ class CommandSender:
                 self.low_cmd.motor_cmd[motor_index].q = cmd_q[joint_index]
                 self.low_cmd.motor_cmd[motor_index].dq = cmd_dq[joint_index]
                 self.low_cmd.motor_cmd[motor_index].tau = cmd_tau[joint_index]
-            # kp kd
+            
+            # setup kp kd
             self.low_cmd.motor_cmd[motor_index].kp = self.robot_kp[motor_index]
             self.low_cmd.motor_cmd[motor_index].kd = self.robot_kd[motor_index]
 
