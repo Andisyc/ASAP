@@ -251,6 +251,7 @@ class BasePolicy:
         listener.join()  # Keep the thread alive
 
     def handle_keyboard_button(self, keycode):
+        # activate policy
         if keycode == "]":
             self.use_policy_action = True
             self.get_ready_state = False
@@ -261,10 +262,14 @@ class BasePolicy:
             self.use_policy_action = False
             self.get_ready_state = False
             self.node.get_logger().info("Actions set to zero")
+        
+        # inital position
         elif keycode == "i":
             self.get_ready_state = True
             self.init_count = 0
             self.node.get_logger().info("Setting to init state")
+        
+        # linear velocity
         elif keycode == "w" and self.stand_command:
             self.lin_vel_command[0, 0]+=0.1
         elif keycode == "s" and self.stand_command:
@@ -273,18 +278,26 @@ class BasePolicy:
             self.lin_vel_command[0, 1]+=0.1 
         elif keycode == "d" and self.stand_command:
             self.lin_vel_command[0, 1]-=0.1
+        
+        # angular velocity
         elif keycode == "q":
             self.ang_vel_command[0, 0]-=0.1
         elif keycode == "e":
             self.ang_vel_command[0, 0]+=0.1
+        
+        # zero out all commands
         elif keycode == "z":
             self.ang_vel_command[0, 0] = 0.
             self.lin_vel_command[0, 0] = 0.
             self.lin_vel_command[0, 1] = 0.
+        
+        # adjust robot height
         elif keycode == "1":
             self.base_height_command += 0.05
         elif keycode == "2":
             self.base_height_command -= 0.05
+        
+        # adjust torque kp
         elif keycode == "5":
             self.command_sender.kp_level -= 0.01
             for i in range(len(self.command_sender.robot_kp)):
@@ -315,6 +328,8 @@ class BasePolicy:
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+        
+        # switch between tapping & walking
         elif keycode == "=":
             self.stand_command = 1 - self.stand_command
             if self.stand_command == 0:
