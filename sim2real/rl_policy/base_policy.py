@@ -211,7 +211,7 @@ class BasePolicy:
             print("No robot state data received, skipping rl inference")
             return
         
-        # Get policy action
+        # Get policy action no matter what
         scaled_policy_action = self.get_policy_action(self.robot_state_data)
 
         # Get torque position
@@ -220,9 +220,9 @@ class BasePolicy:
             q_target = self.get_init_target(self.robot_state_data)
             if self.init_count > 500:
                 self.init_count = 500
-        elif not self.use_policy_action:
+        elif not self.use_policy_action: # 不使用Policy动作
             q_target = self.robot_state_data[:, 7:7+self.num_dofs]
-        else:
+        else: # 使用Policy动作
             if not scaled_policy_action.shape[1] == self.num_dofs:
                 scaled_policy_action = np.concatenate([scaled_policy_action, np.zeros((1, self.num_dofs - scaled_policy_action.shape[1]))], axis=1)
             q_target = scaled_policy_action + self.default_dof_angles
@@ -245,6 +245,7 @@ class BasePolicy:
             except AttributeError:
                 pass  # Handle special keys if needed
 
+        # pip install sshkeyboard
         listener = listen_keyboard(on_press=on_press)
         listener.start()
         listener.join()  # Keep the thread alive
