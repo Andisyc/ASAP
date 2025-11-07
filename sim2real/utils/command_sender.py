@@ -73,6 +73,9 @@ class CommandSender:
         return motor_index in self.weak_motor_joint_index
     
     def send_command(self, cmd_q, cmd_dq, cmd_tau):
+        """
+        this func receive full body command tensor
+        """
         for i in range(self.robot.NUM_MOTORS):
             motor_index = self.robot.JOINT2MOTOR[i]
             joint_index = self.robot.MOTOR2JOINT[i]
@@ -93,5 +96,8 @@ class CommandSender:
             self.low_cmd.motor_cmd[motor_index].kp = self.robot_kp[motor_index]
             self.low_cmd.motor_cmd[motor_index].kd = self.robot_kd[motor_index]
 
+        # warp up with crc then send to motor
         self.low_cmd.crc = self.crc.Crc(self.low_cmd)
+
+        # publish final command for motor
         self.lowcmd_publisher_.Write(self.low_cmd)
