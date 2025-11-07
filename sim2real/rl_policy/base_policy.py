@@ -297,7 +297,7 @@ class BasePolicy:
         elif keycode == "2":
             self.base_height_command -= 0.05
         
-        # adjust torque kp
+        # adjust torque kp wth 0.01 increment
         elif keycode == "5":
             self.command_sender.kp_level -= 0.01
             for i in range(len(self.command_sender.robot_kp)):
@@ -310,6 +310,8 @@ class BasePolicy:
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+        
+        # adjust torque kp wth 0.1 increment
         elif keycode == "4":
             self.command_sender.kp_level -= 0.1
             for i in range(len(self.command_sender.robot_kp)):
@@ -322,6 +324,8 @@ class BasePolicy:
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+        
+        # set torque kp to 1
         elif keycode == "0":
             self.command_sender.kp_level = 1.0
             for i in range(len(self.command_sender.robot_kp)):
@@ -336,6 +340,8 @@ class BasePolicy:
                 self.ang_vel_command[0, 0] = 0.
                 self.lin_vel_command[0, 0] = 0.
                 self.lin_vel_command[0, 1] = 0.
+        
+        # print out all command tensor
         print(f"Linear velocity command: {self.lin_vel_command}")
         print(f"Angular velocity command: {self.ang_vel_command}")
         print(f"Base height command: {self.base_height_command}")
@@ -364,27 +370,35 @@ class BasePolicy:
                 self.handle_joystick_button(key)
 
     def handle_joystick_button(self, cur_key):
-        # Handle button press
+        # activate policy
         if cur_key == "start":
             self.history_handler.reset([0])
             self.use_policy_action = True
             self.get_ready_state = False
             self.node.get_logger().info(colored("Using policy actions", "blue"))
             self.phase = 0.0
+        
+        # zero out policy
         elif cur_key == "B+Y":
             self.use_policy_action = False
             self.get_ready_state = False
             self.node.get_logger().info(colored("Actions set to zero", "blue"))
+        
+        # inital position
         elif cur_key == "A+X":
             self.get_ready_state = True
             self.init_count = 0
             self.node.get_logger().info(colored("Setting to init state", "blue"))
+        
+        # adjust robot height
         elif cur_key == "B+up" and not self.stand_command:
             self.base_height_command[0, 0] += 0.05
             self.node.get_logger().info(colored(f"Base height command: {self.base_height_command[0, 0]}", "green"))
         elif cur_key == "B+down" and not self.stand_command:
             self.base_height_command[0, 0] -= 0.05
             self.node.get_logger().info(colored(f"Base height command: {self.base_height_command[0, 0]}", "green"))
+        
+        # # adjust torque kp wth 0.1 increment
         elif cur_key == "Y+left":
             self.command_sender.kp_level -= 0.1
             for i in range(len(self.command_sender.robot_kp)):
@@ -397,6 +411,8 @@ class BasePolicy:
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+
+        # adjust torque kp wth 0.01 increment
         elif cur_key == "A+left":
             self.command_sender.kp_level -= 0.01
             for i in range(len(self.command_sender.robot_kp)):
@@ -409,16 +425,22 @@ class BasePolicy:
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+        
+        # set torque kp to 1
         elif cur_key == "A+Y":
             self.command_sender.kp_level = 1.0
             for i in range(len(self.command_sender.robot_kp)):
                 self.command_sender.robot_kp[i] = self.robot.MOTOR_KP[i] * self.command_sender.kp_level
             self.node.get_logger().info(colored(f"Debug kp level: {self.command_sender.kp_level}", "green"))
             self.node.get_logger().info(colored(f"Debug kp: {self.command_sender.robot_kp}", "green"))
+        
+        # zero out linear velocity
         elif cur_key == "L2":
             self.lin_vel_command[0, :] *= 0.
             self.ang_vel_command[0, :] *= 0.
             self.node.get_logger().info(colored("Velocities set to zero", "blue"))
+        
+        # zero out all velocity
         elif cur_key == "R2":
             self.stand_command = 1 - self.stand_command
             if self.stand_command == 0:
