@@ -242,7 +242,7 @@ if __name__ == "__main__":
     # 创建主节点
     node = rclpy.create_node('simple_node')
 
-    # 创建主循环并启动
+    # 创建并启动ros循环
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start() 
 
@@ -254,6 +254,6 @@ if __name__ == "__main__":
                                                         use_jit=args.use_jit,
                                                         rl_rate=50, 
                                                         decimation=4)
-    # 启动Policy Model
+    # 启动主循环
     locomotion_policy.run()
     rclpy.shutdown()
