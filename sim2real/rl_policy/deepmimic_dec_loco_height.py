@@ -225,11 +225,12 @@ class MotionTrackingDecLocoHeightPolicy(MotionTrackingDecLocoPolicy):
         return obs.astype(np.float32)
     
 if __name__ == "__main__":
-    loco_path =  './models/dec_loco/20250109_231507-noDR_rand_history_loco_stand_height_noise-decoupled_locomotion-g1_29dof/model_6600.onnx'
+    conf_path = 'config/g1_29dof_hist.yaml'
+    loco_path = './models/dec_loco/20250109_231507-noDR_rand_history_loco_stand_height_noise-decoupled_locomotion-g1_29dof/model_6600.onnx'
     mimc_path = './models/mimic'
 
     parser = argparse.ArgumentParser(description='Robot')
-    parser.add_argument('--config',            type=str,            default='config/g1_29dof_hist.yaml', help='config file')
+    parser.add_argument('--config',            type=str,            default=conf_path,                   help='config file')
     parser.add_argument('--loco_model_path',   type=str,            default=loco_path,                   help='loco model path')
     parser.add_argument('--mimic_model_paths', type=str,            default=mimc_path,                   help='mimic model paths')
     parser.add_argument('--use_jit',           action='store_true', default=False,                       help='use jit')
