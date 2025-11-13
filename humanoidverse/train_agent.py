@@ -11,16 +11,13 @@ from omegaconf import OmegaConf
 import logging
 from loguru import logger
 
-
-
-
 from utils.config_utils import *  # noqa: E402, F403
-
 
 @hydra.main(config_path="config", config_name="base", version_base="1.1")
 def main(config: OmegaConf):
     # import ipdb; ipdb.set_trace()
     simulator_type = config.simulator['_target_'].split('.')[-1]
+
     # import ipdb; ipdb.set_trace()
     if simulator_type == 'IsaacSim':
         from omni.isaac.lab.app import AppLauncher
@@ -39,10 +36,9 @@ def main(config: OmegaConf):
         app_launcher = AppLauncher(args_cli)
         simulation_app = app_launcher.app  
         
-        # import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     if simulator_type == 'IsaacGym':
         import isaacgym  # noqa: F401
-
 
     # have to import torch after isaacgym
     import torch  # noqa: E402
@@ -106,9 +102,9 @@ def main(config: OmegaConf):
     #         rank = 0
     #     fabric.seed_everything(config.seed + rank)
     #     seeding(config.seed + rank, torch_deterministic=config.torch_deterministic)
+
     config.env.config.save_rendering_dir = str(Path(config.experiment_dir) / "renderings_training")
     env: BaseEnv = instantiate(config=config.env, device=device)
-
 
     experiment_save_dir = Path(config.experiment_dir)
     experiment_save_dir.mkdir(exist_ok=True, parents=True)
