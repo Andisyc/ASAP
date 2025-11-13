@@ -482,11 +482,13 @@ You should see the UI like this:
 
 <img src="imgs/rviz.png" width="400px"/>
 
+```
 cd ~
 git clone https://github.com/eclipse-cyclonedds/cyclonedds -b releases/0.10.x
 cd cyclonedds && mkdir build install && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install
 cmake --build . --target install
+```
 
 Install Unitree SDK
 
