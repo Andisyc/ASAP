@@ -16,6 +16,11 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from tqdm import tqdm
 from smpl_sim.smpllib.smpl_joint_names import SMPL_MUJOCO_NAMES, SMPL_BONE_ORDER_NAMES, SMPLH_BONE_ORDER_NAMES, SMPLH_MUJOCO_NAMES
+
+import sys
+project_root = "/home/chengyuxuan/ASAP/"
+sys.path.insert(0, project_root)
+
 from humanoidverse.utils.motion_lib.torch_humanoid_batch import Humanoid_Batch
 from smpl_sim.utils.smoothing_utils import gaussian_kernel_1d, gaussian_filter_1d_batch
 from easydict import EasyDict
@@ -61,8 +66,8 @@ def process_motion(key_names, key_name_to_pkls, cfg):
     robot_joint_pick_idx = [ robot_joint_names_augment.index(j) for j in robot_joint_pick]
     smpl_joint_pick_idx = [SMPL_BONE_ORDER_NAMES.index(j) for j in smpl_joint_pick]
     
-    smpl_parser_n = SMPL_Parser(model_path="humanoidverse/data/smpl", gender="neutral")
-    shape_new, scale = joblib.load(f"humanoidverse/data/shape/{cfg.robot.motion.humanoid_type}/shape_optimized_v1.pkl")
+    smpl_parser_n = SMPL_Parser(model_path=project_root+"humanoidverse/data/smpl/models", gender="neutral")
+    shape_new, scale = joblib.load(f"{project_root}humanoidverse/data/shape/{cfg.robot.motion.humanoid_type}/shape_optimized_v1.pkl")
 
     all_data = {}
     
