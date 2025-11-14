@@ -22,7 +22,7 @@ def main(config: OmegaConf): # hydra的标准写法: 装饰器修饰main, cfg输
     # import ipdb; ipdb.set_trace()
     if simulator_type == 'IsaacSim':
 
-        # 从命令行接收参数, 高度封装!!!
+        # 从命令行接收参数
         import argparse
         from omni.isaac.lab.app import AppLauncher
         parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -91,6 +91,7 @@ def main(config: OmegaConf): # hydra的标准写法: 装饰器修饰main, cfg输
     else:
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
     
+    # 解析config参数
     pre_process_config(config)
 
     # torch.set_float32_matmul_precision("medium")
