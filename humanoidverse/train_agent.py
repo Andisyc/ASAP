@@ -20,13 +20,16 @@ def main(config: OmegaConf):
 
     # import ipdb; ipdb.set_trace()
     if simulator_type == 'IsaacSim':
-        from omni.isaac.lab.app import AppLauncher
+
+        # 从命令行接收参数, 高度封装!!!
         import argparse
+        from omni.isaac.lab.app import AppLauncher
         parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
         AppLauncher.add_app_launcher_args(parser)
-        
         args_cli, hydra_args = parser.parse_known_args()
         sys.argv = [sys.argv[0]] + hydra_args
+
+        # 从config文件接收参数
         args_cli.num_envs = config.num_envs
         args_cli.seed = config.seed
         args_cli.env_spacing = config.env.config.env_spacing # config.env_spacing
