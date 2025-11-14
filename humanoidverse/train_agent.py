@@ -44,9 +44,8 @@ def main(config: OmegaConf):
         import isaacgym  # noqa: F401
 
     # have to import torch after isaacgym
-    import torch  # noqa: E402
+    import torch, wandb  # noqa: E402
     from utils.common import seeding
-    import wandb
     from humanoidverse.envs.base_task.base_task import BaseTask  # noqa: E402
     from humanoidverse.agents.base_algo.base_algo import BaseAlgo  # noqa: E402
     from humanoidverse.utils.helpers import pre_process_config
@@ -64,7 +63,6 @@ def main(config: OmegaConf):
     # Get log level from LOGURU_LEVEL environment variable or use INFO as default
     console_log_level = os.environ.get("LOGURU_LEVEL", "INFO").upper()
     logger.add(sys.stdout, level=console_log_level, colorize=True)
-
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger().addHandler(HydraLoggerBridge())
 
