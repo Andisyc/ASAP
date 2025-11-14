@@ -13,8 +13,9 @@ from loguru import logger
 
 from utils.config_utils import *  # noqa: E402, F403
 
+# hydra是一个配置管理库, 通过配置文件管理参数, 命令行可以覆盖或添加新的配置项
 @hydra.main(config_path="config", config_name="base", version_base="1.1")
-def main(config: OmegaConf):
+def main(config: OmegaConf): # hydra的标准写法: 装饰器修饰main, cfg输入main
     # import ipdb; ipdb.set_trace()
     simulator_type = config.simulator['_target_'].split('.')[-1]
 
