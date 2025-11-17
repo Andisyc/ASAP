@@ -227,7 +227,7 @@ class MotionTrackingDecLocoHeightPolicy(MotionTrackingDecLocoPolicy):
 if __name__ == "__main__":
     conf_path = 'config/g1_29dof_hist.yaml'
     loco_path = './models/dec_loco/20250109_231507-noDR_rand_history_loco_stand_height_noise-decoupled_locomotion-g1_29dof/model_6600.onnx'
-    mimc_path = './models/mimic'
+    mimc_path = './models/mimic' # /home/chengyuxuan/ASAP/logs/MotionTracking/20251115_122254-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof/model_99900.pt
 
     parser = argparse.ArgumentParser(description='Robot')
     parser.add_argument('--config',            type=str,            default=conf_path,                   help='config file')

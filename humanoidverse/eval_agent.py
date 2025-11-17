@@ -7,6 +7,11 @@ from hydra.utils import instantiate
 from hydra.core.hydra_config import HydraConfig
 from hydra.core.config_store import ConfigStore
 from omegaconf import OmegaConf
+
+import sys
+project_root = "/home/chengyuxuan/ASAP/"
+sys.path.insert(0, project_root)
+
 from humanoidverse.utils.logging import HydraLoggerBridge
 import logging
 from utils.config_utils import *  # noqa: E402, F403
