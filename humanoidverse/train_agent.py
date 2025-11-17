@@ -44,6 +44,10 @@ def main(config: OmegaConf): # hydra的标准写法: 装饰器修饰main, cfg输
     if simulator_type == 'IsaacGym':
         import isaacgym  # noqa: F401
 
+    import sys
+    project_root = "/home/chengyuxuan/ASAP/"
+    sys.path.insert(0, project_root)
+
     # have to import torch after isaacgym
     import torch, wandb  # noqa: E402
     from utils.common import seeding
