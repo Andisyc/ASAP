@@ -381,7 +381,7 @@ mimic_robot_types: {
 }
 
 mimic_models: {
-  "single_foot": "model_99900.onnx", 
+  "single_foot": "model_40000.onnx", 
 
   "APT_level1": "model_176500.onnx",
   
