@@ -31,7 +31,7 @@ use_wandb: False
 log_task_name: TEST
 
 ### Simulation
-sim_type: isaacgym
+sim_type: isaacgym # mujoco
 env_spacing: 20
 output_dir: ${experiment_dir}/output
 
