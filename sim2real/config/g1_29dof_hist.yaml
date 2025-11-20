@@ -354,9 +354,11 @@ robot_dofs: {
 }
 
 mimic_robot_types: {
+  # "lift_up": "g1_29dof",
+
   "single_foot": "g1_29dof_anneal_23dof",
 
-  # "lift_up": "g1_29dof",
+  "static_pose": "g1_29dof_anneal_23dof",
 
   "APT_level1": "g1_29dof_anneal_23dof",
 
@@ -381,7 +383,9 @@ mimic_robot_types: {
 }
 
 mimic_models: {
-  "single_foot": "model_40000.onnx", 
+  "single_foot": "model_99900.onnx", 
+
+  "static_pose": "model_164500.onnx", 
 
   "APT_level1": "model_176500.onnx",
   
@@ -408,15 +412,6 @@ mimic_models: {
 
 
 start_upper_body_dof_pos: {
-  "single_foot": 
-  [
-    0.0, 0.0, 0.0, # waist
-    0.0, 0.0, 0.0, 0.0, # left shoulder and elbow
-    0.0, 0.0, 0.0, # left wrist
-    0.0, 0.0, 0.0, 0.0, # right shoulder and elbow
-    0.0, 0.0, 0.0 # right wrist
-  ],
-
   "lift_up": 
   [
     0.0, 0.0, 0.0, # waist
@@ -425,6 +420,20 @@ start_upper_body_dof_pos: {
     0.0, 0.0, 0.0, 0.0, # right shoulder and elbow
     0.0, 0.0, 0.0 # right wrist
   ],
+
+  "single_foot": 
+  [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, # waist
+  0.21672365069389343, 0.15629297494888306, -0.5167576670646667, 0.5782126784324646, # left shoulder and elbow
+  0.0, 0.0, 0.0, # left wrist
+  0.25740593671798706, -0.2504104673862457, 0.22500675916671753, 0.5127624273300171, # right shoulder and elbow
+  0.0, 0.0, 0.0], # right wrist
+
+  "static_pose": 
+  [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, # waist
+  0.21672365069389343, 0.15629297494888306, -0.5167576670646667, 0.5782126784324646, # left shoulder and elbow
+  0.0, 0.0, 0.0, # left wrist
+  0.25740593671798706, -0.2504104673862457, 0.22500675916671753, 0.5127624273300171, # right shoulder and elbow
+  0.0, 0.0, 0.0], # right wrist
 
   "APT_level1":
   [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, # waist
@@ -520,9 +529,11 @@ start_upper_body_dof_pos: {
 }
 
 motion_length_s: {
+  "lift_up": 11.067,
+
   "single_foot": 7.233,
 
-  "lift_up": 11.067,
+  "static_pose": 2.967,
 
   "APT_level1": 7.66,
 
