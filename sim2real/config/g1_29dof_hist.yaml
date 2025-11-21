@@ -385,7 +385,7 @@ mimic_robot_types: {
 mimic_models: {
   "single_foot": "model_99900.onnx", 
 
-  "static_pose": "model_164500.onnx", 
+  "static_pose": "model_219000.onnx", 
 
   "APT_level1": "model_176500.onnx",
   
@@ -429,10 +429,10 @@ start_upper_body_dof_pos: {
   0.0, 0.0, 0.0], # right wrist
 
   "static_pose": 
-  [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, # waist
-  0.21672365069389343, 0.15629297494888306, -0.5167576670646667, 0.5782126784324646, # left shoulder and elbow
+  [0.166811526, 0.00442058872, 0.00185807608, # waist
+  -0.547196507, 1.20830214, 1.72831786, 0.928850651, # left shoulder and elbow
   0.0, 0.0, 0.0, # left wrist
-  0.25740593671798706, -0.2504104673862457, 0.22500675916671753, 0.5127624273300171, # right shoulder and elbow
+  -0.665762246, -1.44696128, -1.70216227, 1.14535439, # right shoulder and elbow
   0.0, 0.0, 0.0], # right wrist
 
   "APT_level1":

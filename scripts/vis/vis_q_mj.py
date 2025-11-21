@@ -53,10 +53,10 @@ def main(cfg : DictConfig) -> None:
     global curr_start, num_motions, motion_id, motion_acc, time_step, dt, paused, motion_data_keys
     device = torch.device("cpu")
 
-    asset_path = Path(cfg.robot.motion.asset.assetRoot)
-    asset_file = cfg.robot.motion.asset.assetFileName
-    humanoid_xml = asset_path / asset_file
-
+    asset_path = Path(cfg.robot.motion.asset.assetRoot) # humanoidverse/data/robots/g1
+    asset_file = cfg.robot.motion.asset.assetFileName # g1_29dof_anneal_23dof_fitmotionONLY.xml
+    humanoid_xml = asset_path / asset_file # humanoidverse/data/robots/g1/g1_29dof_anneal_23dof_fitmotionONLY.xml
+    
     curr_start, num_motions, motion_id, motion_acc, time_step, dt, paused = 0, 1, 0, set(), 0, 1/30, False
 
     if cfg.visualize_motion_file is None:
@@ -65,7 +65,7 @@ def main(cfg : DictConfig) -> None:
         visualize_motion_file = cfg.visualize_motion_file
     logger.info(colored(f"Visualizing Motion: {visualize_motion_file}", "green"))
     motion_data = joblib.load(visualize_motion_file)
-    motion_data_keys = list(motion_data.keys())
+    motion_data_keys = list(motion_data.keys()) # ['0-motions_raw_tairantestbed_smpl_Static_poses']
 
     mj_model = mujoco.MjModel.from_xml_path(str(humanoid_xml))
     mj_data = mujoco.MjData(mj_model)
@@ -77,14 +77,22 @@ def main(cfg : DictConfig) -> None:
         print(f"Created {viewer.user_scn.ngeom} capsules")
         while viewer.is_running():
             step_start = time.time()
-            curr_motion_key = motion_data_keys[motion_id]
-            curr_motion = motion_data[curr_motion_key]
+            curr_motion_key = motion_data_keys[motion_id] # the name of motion sequence we loaded
+            curr_motion = motion_data[curr_motion_key] # curr_motion is all the data of motion sequence we loaded
             curr_time = int(time_step/dt) % curr_motion['dof'].shape[0]
             
             mj_data.qpos[:3] = curr_motion['root_trans_offset'][curr_time]
             mj_data.qpos[3:7] = curr_motion['root_rot'][curr_time][[3, 0, 1, 2]]
             mj_data.qpos[7:] = curr_motion['dof'][curr_time]
-                
+
+            # print("\n")
+            # print("curr_time: ", curr_time, curr_motion['dof'].shape[0])
+            # print("mj_data.qpos: ", mj_data.qpos[7:])
+            # print("---------------------------------")
+
+            # temp = 1
+            # assert temp == 2
+            
             mujoco.mj_forward(mj_model, mj_data)
             if not paused:
                 time_step += dt

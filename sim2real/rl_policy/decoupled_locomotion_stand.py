@@ -206,9 +206,6 @@ if __name__ == "__main__":
     
     rate = node.create_rate(50)
 
-
-    
-
     locomotion_policy = DecoupledLocomotionStandPolicy(config=config, 
                                                         node=node, 
                                                         model_path=args.model_path, 
