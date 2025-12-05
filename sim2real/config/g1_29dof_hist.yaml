@@ -356,6 +356,8 @@ robot_dofs: {
 mimic_robot_types: {
   # "lift_up": "g1_29dof",
 
+  "sway_body": "g1_29dof_anneal_23dof",
+
   "single_foot": "g1_29dof_anneal_23dof",
 
   "static_pose": "g1_29dof_anneal_23dof",
@@ -383,6 +385,8 @@ mimic_robot_types: {
 }
 
 mimic_models: {
+  "sway_body": "model_120000.onnx", 
+
   "single_foot": "model_99900.onnx", 
 
   "static_pose": "model_219000.onnx", 
@@ -420,6 +424,13 @@ start_upper_body_dof_pos: {
     0.0, 0.0, 0.0, 0.0, # right shoulder and elbow
     0.0, 0.0, 0.0 # right wrist
   ],
+
+  "sway_body": 
+  [0.0153805483, 0.0413683131, 0.129567757, # waist
+  0.00687538041, 0.0590519384, 0.0757240802, 1.21593726, # left shoulder and elbow
+  0.0, 0.0, 0.0, # left wrist
+  0.00687538041, 0.0590519384, 0.0757240802, 1.21593726, # right shoulder and elbow
+  0.0, 0.0, 0.0], # right wrist
 
   "single_foot": 
   [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, # waist
@@ -530,6 +541,8 @@ start_upper_body_dof_pos: {
 
 motion_length_s: {
   "lift_up": 11.067,
+
+  "sway_body": 9.333,
 
   "single_foot": 7.233,
 
